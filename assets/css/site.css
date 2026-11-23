@@ -193,19 +193,20 @@ main { width: min(1216px, 100% - 2 * clamp(16px, 4vw, 40px)); margin: 0 auto; }
 .atelier { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 28px; }
 .etapes { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; counter-reset: etape; }
 .etape { position: relative; padding: 18px 20px 20px 74px; border: 2px solid var(--line); border-radius: var(--r-case); background: var(--bg); counter-increment: etape; }
-.etape::before { content: counter(etape); position: absolute; left: 18px; top: 16px; display: grid; place-items: center; width: 38px; height: 38px; border: 2px solid var(--bg); outline: 2px solid var(--line); border-radius: 50%; background: var(--royal); color: var(--ink); font: 400 20px/1 var(--titre); }
+.etape::before { content: counter(etape, decimal-leading-zero); position: absolute; left: 16px; top: 15px; width: 50px; text-align: center; color: var(--ink); font: 400 36px/1 var(--titre); letter-spacing: .04em; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 0 var(--royal), 2px 2px 0 var(--royal), 3px 3px 0 var(--royal); rotate: -6deg; transition: color .3s ease-out, text-shadow .3s ease-out, rotate .3s var(--ressort); }
 .etape h2 { margin: 4px 0 4px; font: 400 22px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; }
 .etape > p { margin: 0 0 12px; font-size: 15px; color: var(--ink-2); }
 .etape .field { flex: none; max-width: 520px; border-color: var(--line); background: var(--surface); }
 .etape .field:focus-within { border-color: var(--ciel); }
 .etape .field[data-bad="true"] { border-color: var(--corail); }
 .etape .court { width: 180px; }
+.etape .moyen { width: 250px; }
 .etape label { display: block; margin: 12px 0 8px; font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
 .etape .btn { margin-top: 16px; }
 .etape .note { color: var(--ink-2); }
 .etape .note a { color: var(--ink); text-underline-offset: 4px; }
 .etape.ferme { border-style: dashed; }
-.etape.ferme::before { background: var(--surface); color: var(--ink-2); }
+.etape.ferme::before { color: var(--ink-3); text-shadow: 1px 1px 0 var(--line), 2px 2px 0 var(--line), 3px 3px 0 var(--line); }
 .cote { position: sticky; top: 88px; }
 .cote .fichier pre { font-size: 12.5px; }
 
@@ -243,11 +244,8 @@ main { width: min(1216px, 100% - 2 * clamp(16px, 4vw, 40px)); margin: 0 auto; }
 .pied-col h2 { margin: 0 0 6px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
 .pied-col a { justify-self: start; font-size: 15px; color: var(--ink); text-decoration: none; background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 2px no-repeat; padding-bottom: 3px; transition: background-size .2s ease-out, translate .2s ease-out; }
 .pied-col a:hover { background-size: 100% 2px; translate: 3px 0; }
-/* Le coq du pied de page n'est pas celui du hero : il est accoudé à la barre du bas. Au repos seule la tête
-   dépasse ; au survol il se hisse et on voit ses ailes croisées posées sur la barre. */
-.pied-coq { position: absolute; right: max(clamp(16px, 4vw, 40px), calc((100% - 1216px) / 2)); bottom: -3px; width: auto; height: 236px; translate: 0 36%; transition: translate .22s var(--sortie); }
-.pied:hover .pied-coq { translate: 0 0; transition: translate .46s var(--ressort); }
-@media (hover: none) { .pied-coq { translate: 0 0; } }
+/* Le coq du pied de page n'est pas celui du hero : il est accoudé à la barre du bas, ailes croisées. Il ne bouge pas. */
+.pied-coq { position: absolute; right: max(clamp(16px, 4vw, 40px), calc((100% - 1216px) / 2)); bottom: -3px; width: auto; height: 236px; }
 .pied-bas { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; padding: 16px max(clamp(16px, 4vw, 40px), calc((100% - 1216px) / 2)) 20px; border-top: 2px solid var(--line); background: var(--bg); font: 500 12px/1.5 var(--mono); color: var(--ink-2); }
 .pied-bas p { margin: 0; }
 
@@ -488,7 +486,7 @@ html.js [data-v].vu { opacity: 1; translate: none; scale: none; rotate: none; fi
 .coin[data-etat="charge"] #k-liens { visibility: hidden; }
 
 /* Launch : cinq marches à gauche, le ticket du lancement à droite. */
-.etape[data-fait="true"]::before { background: var(--or); color: var(--bg); outline-color: var(--or-fonce); }
+.etape[data-fait="true"]::before { color: var(--or); text-shadow: 1px 1px 0 var(--line), 2px 2px 0 var(--line), 3px 3px 0 var(--line); rotate: -3deg; }
 .etape .identite { margin-bottom: 4px; }
 .etape .fichier { max-width: 520px; margin-top: 14px; transform: none; }
 .etape .fichier:hover { transform: translateY(-2px); }
@@ -613,3 +611,18 @@ html.js [data-v].vu { opacity: 1; translate: none; scale: none; rotate: none; fi
 @media (max-width: 640px) {
   .paire { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Les champs de la page Launch : une icône du projet en tête de champ, le logo officiel d'une marque à plat (jamais
+   penché, jamais recoloré), le logo d'Ethereum devant un montant en ETH. */
+.field-ico { flex: none; width: 30px; height: 30px; margin: 0 9px 0 -6px; transform: rotate(-6deg); transition: transform .16s var(--sortie); }
+.field:focus-within .field-ico { transform: rotate(4deg) scale(1.1); transition: transform .24s var(--ressort); }
+.field-ico.logo, .field:focus-within .field-ico.logo { width: 16px; height: auto; margin: 0 11px 0 2px; transform: none; }
+.field-post { flex: none; margin-left: 10px; color: var(--ink-2); white-space: nowrap; }
+.eth::before { content: ""; display: inline-block; width: .95em; height: 1.1em; margin-right: .22em; vertical-align: -.2em; background: url("../brand/eth.svg") center / 150% auto no-repeat; }
+/* Envoyer une image : un bouton, ou l'image lâchée sur l'étape. */
+.envoi { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; max-width: 520px; margin-top: 10px; }
+.envoi .mini { height: 38px; padding: 0 14px 0 8px; gap: 8px; color: var(--ink); }
+.envoi .mini img { width: 26px; height: 26px; transform: rotate(-6deg); transition: transform .16s var(--sortie); }
+.envoi .mini:hover img { transform: rotate(5deg) scale(1.12); transition: transform .24s var(--ressort); }
+.envoi .aide { margin: 0; flex: 1 1 200px; }
+.etape[data-depose="true"] { border-color: var(--ciel); border-style: dashed; }

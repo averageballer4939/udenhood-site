@@ -252,6 +252,9 @@
 
   // ---------- l'écran
   const eth = (wei) => `${C.ether(wei, 5)} ETH`;
+  // Dans le ticket, l'unité porte le logo d'Ethereum. Une valeur pas encore connue reste un tiret, sans logo.
+  const unite = () => el('span', { class: 'eth', text: 'ETH' });
+  const poserMontant = (cible, wei, { avant = '', apres = '' } = {}) => cible.replaceChildren(...(wei == null ? ['—'] : [`${avant}${C.ether(wei, 5)} `, unite(), apres]));
   function poserEtat(liste, cle, genre, texte) {
     const li = liste.querySelector(`[data-k="${cle}"]`);
     li.dataset.etat = genre;
@@ -322,12 +325,12 @@
     poserEtat(liste, 'pons', !pons ? (etat.ponsErreur ? 'faux' : 'wait') : !pons.ouvert || pons.peutLancer === false ? 'faux' : 'on', !pons ? (etat.ponsErreur ? 'Pons did not answer' : 'Asking Pons…') : !pons.ouvert ? 'Pons has paused launches' : pons.peutLancer === false ? 'Pons only accepts approved wallets right now' : 'Pons accepts launches');
 
     // Les coûts : chaque ligne est lue ou calculée ; ce qui n'est pas encore connu reste un tiret
-    $('#t-frais').textContent = pons ? eth(pons.frais) : '—';
-    $('#t-achat').textContent = a.bon ? eth(a.wei) : '—';
+    poserMontant($('#t-frais'), pons ? pons.frais : null);
+    poserMontant($('#t-achat'), a.bon ? a.wei : null);
     const dv = etat.devis;
-    $('#t-gaz').textContent = dv && dv.reseau != null ? `≈ ${eth(dv.reseau)}` : '—';
+    poserMontant($('#t-gaz'), dv && dv.reseau != null ? dv.reseau : null, { avant: '≈ ' });
     const total = pons && a.bon ? pons.frais + a.wei + (dv && dv.reseau != null ? dv.reseau : 0n) : null;
-    $('#t-total').textContent = total == null ? '—' : dv && dv.reseau != null ? eth(total) : `${eth(total)} + network`;
+    poserMontant($('#t-total'), total, { apres: dv && dv.reseau != null ? '' : ' + network' });
     const recoit = $('#t-jetons');
     recoit.hidden = !(dv && dv.jetons > 0n && pons);
     if (!recoit.hidden) recoit.textContent = `Your first buy gets about ${(dv.jetons / 10n ** 18n).toLocaleString('en-US')} $${ticker()}, ${(Number((dv.jetons * 10000n) / pons.supply) / 100).toFixed(2)} % of the supply.`;
@@ -461,6 +464,90 @@
     vue('fini');
     ticket.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
+
+  // ---------- l'image envoyée depuis l'ordinateur
+  // Elle est recadrée en carré et ramenée à 512 px dans le navigateur, puis rangée par le site (api/image), qui
+  // rend son adresse. C'est la seule chose que le site garde.
+  const imageAide = $('#l-image-aide');
+  const direImage = (texte, mauvais) => {
+    imageAide.textContent = texte;
+    imageAide.dataset.kind = mauvais ? 'bad' : '';
+  };
+  async function preparer(fichier) {
+    const source = await createImageBitmap(fichier);
+    const cote = Math.min(source.width, source.height);
+    const taille = Math.min(512, cote);
+    const toile = document.createElement('canvas');
+    toile.width = taille;
+    toile.height = taille;
+    const ctx = toile.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, (source.width - cote) / 2, (source.height - cote) / 2, cote, cote, 0, 0, taille, taille);
+    const versFichier = (type, qualite) => new Promise((ok) => toile.toBlob(ok, type, qualite));
+    let image = await versFichier('image/webp', 0.92);
+    if (!image || image.type !== 'image/webp') image = await versFichier('image/png'); // navigateur sans WebP
+    if (image && image.size > 580 * 1024) image = await versFichier('image/jpeg', 0.9);
+    return image;
+  }
+  let envoiTour = 0;
+  async function envoyerImage(fichier) {
+    if (!fichier) return;
+    const moi = ++envoiTour;
+    if (!/^image\/(png|jpeg|webp|gif)$/.test(fichier.type)) return direImage('That file is not a PNG, JPEG, WebP or GIF image.', true);
+    if (fichier.size > 12 * 1024 * 1024) return direImage('That image is over 12 MB.', true);
+    direImage('Uploading…');
+    $('#l-envoyer').disabled = true;
+    try {
+      const image = await preparer(fichier);
+      if (!image) throw new Error('image');
+      const rep = await fetch('api/image', { method: 'POST', headers: { 'content-type': 'application/octet-stream' }, body: image });
+      const j = await rep.json().catch(() => ({}));
+      if (moi !== envoiTour) return;
+      if (!rep.ok || !C.lien(j.url)) {
+        direImage(rep.status === 429 ? 'Too many images in a row. Try again in a few minutes.' : rep.status === 413 ? 'That image is too heavy, even resized.' : 'The upload did not go through. Try again, or paste a link.', true);
+        return;
+      }
+      c.image.value = j.url;
+      c.image.dataset.auto = 'false';
+      direImage('Uploaded. The coin will carry this image.');
+      garder();
+      etat.devis = null;
+      peindre();
+    } catch {
+      if (moi === envoiTour) direImage('That image could not be read. Try another file.', true);
+    } finally {
+      $('#l-envoyer').disabled = false;
+    }
+  }
+  const choix = $('#l-image-fichier');
+  $('#l-envoyer').addEventListener('click', () => choix.click());
+  choix.addEventListener('change', () => {
+    envoyerImage(choix.files[0]);
+    choix.value = '';
+  });
+  // Une image lâchée sur l'étape, ou collée dans le champ.
+  const zone = $('#e-coin');
+  const porteUnFichier = (ev) => !!ev.dataTransfer && [...ev.dataTransfer.types].includes('Files');
+  zone.addEventListener('dragover', (ev) => {
+    if (!porteUnFichier(ev)) return;
+    ev.preventDefault();
+    zone.dataset.depose = 'true';
+  });
+  zone.addEventListener('dragleave', () => {
+    zone.dataset.depose = 'false';
+  });
+  zone.addEventListener('drop', (ev) => {
+    if (!porteUnFichier(ev)) return;
+    ev.preventDefault();
+    zone.dataset.depose = 'false';
+    envoyerImage(ev.dataTransfer.files[0]);
+  });
+  c.image.addEventListener('paste', (ev) => {
+    const fichier = [...((ev.clipboardData && ev.clipboardData.files) || [])].find((f) => f.type.startsWith('image/'));
+    if (!fichier) return;
+    ev.preventDefault();
+    envoyerImage(fichier);
+  });
 
   // ---------- gestes
   c.repo.addEventListener('input', () => {

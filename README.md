@@ -22,7 +22,7 @@ This repo is the site at https://udenhood.fun.
 
 ## How it is made
 
-Plain HTML, CSS and JavaScript. No framework, no dependencies, no server, no database. The checks and the chain reads run in your browser.
+Plain HTML, CSS and JavaScript. No framework, no account system, no database. The checks and the chain reads run in your browser. One small function, `api/image.js`, stores a coin image uploaded from the launch page: that image is the only thing the site keeps.
 
 | Path | What it is |
 |---|---|
@@ -35,6 +35,7 @@ Plain HTML, CSS and JavaScript. No framework, no dependencies, no server, no dat
 | `assets/js/chaine.js` | Robinhood Chain and the Pons contracts: addresses, encoding, reads, simulation |
 | `assets/js/wallet.js` | Wallet discovery (EIP-6963) and requests (EIP-1193) |
 | `assets/js/lancer.js` | The launch flow |
+| `api/image.js` | Stores an uploaded coin image (PNG, WebP or JPEG, 600 KB at most) |
 
 ## Run it
 
@@ -46,4 +47,4 @@ python -m http.server 8000
 
 ## Fonts and logos
 
-The fonts are under the SIL Open Font License, see `assets/fonts`. The GitHub, X and Pons logos belong to their owners. Udenhood is not affiliated with Robinhood, GitHub or Pons.
+The fonts are under the SIL Open Font License, see `assets/fonts`. The GitHub, X, Pons and Ethereum logos belong to their owners. Udenhood is not affiliated with Robinhood, GitHub or Pons.

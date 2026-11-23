@@ -1,0 +1,8 @@
+{
+  "name": "udenhood-site",
+  "private": true,
+  "description": "The Udenhood site. Static pages, plus one function that stores a coin image uploaded from the launch page.",
+  "dependencies": {
+    "@vercel/blob": "^2.9.0"
+  }
+}

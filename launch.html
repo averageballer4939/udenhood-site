@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://www.udenhood.fun/icon-512.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@udenhood">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self' https:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -72,19 +72,24 @@
           <label for="l-texte">What the project does</label>
           <div class="field haut"><textarea id="l-texte" rows="3" spellcheck="true" placeholder="One or two plain sentences."></textarea></div>
           <p class="aide" id="l-texte-aide">Udenhood adds one line at the end: the link to your repo.</p>
-          <label for="l-image">Image link</label>
-          <div class="field"><input id="l-image" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
-          <p class="aide">A square image, by https or ipfs. Empty, it is your GitHub picture.</p>
+          <label for="l-image">Image</label>
+          <div class="field"><img class="field-ico" src="assets/icons/image.png" width="256" height="256" alt=""><input id="l-image" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
+
+          <div class="envoi">
+            <button class="mini" type="button" id="l-envoyer"><img src="assets/icons/image.png" width="256" height="256" alt="">Upload an image</button>
+            <input class="sr" type="file" id="l-image-fichier" accept="image/png,image/jpeg,image/webp,image/gif" tabindex="-1" aria-hidden="true">
+            <p class="aide" id="l-image-aide" role="status">Upload one, drop it here, or paste a link. Empty, it is your GitHub picture.</p>
+          </div>
           <details class="plus">
             <summary>Links, first buy, creator tax</summary>
           <label for="l-site">Website</label>
-          <div class="field"><input id="l-site" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
+          <div class="field"><img class="field-ico" src="assets/icons/web.png" width="256" height="256" alt=""><input id="l-site" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
 
           <label for="l-x">X account</label>
-          <div class="field"><span class="field-pre" aria-hidden="true">x.com/</span><input id="l-x" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="40" placeholder="handle"></div>
+          <div class="field"><img class="field-ico logo" src="assets/brand/x-logo.png" width="64" height="65" alt=""><span class="field-pre" aria-hidden="true">x.com/</span><input id="l-x" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="40" placeholder="handle"></div>
 
-          <label for="l-achat">Your first buy, in ETH</label>
-          <div class="field court"><input id="l-achat" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" maxlength="12" placeholder="0"></div>
+          <label for="l-achat">Your first buy</label>
+          <div class="field moyen"><img class="field-ico" src="assets/icons/buy.png" width="256" height="256" alt=""><input id="l-achat" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" maxlength="12" placeholder="0"><span class="field-post" aria-hidden="true"><span class="eth">ETH</span></span></div>
           <p class="aide">Your wallet buys its own coin inside the launch transaction. Anyone can see it.</p>
             <label for="l-taxe">Creator tax on each trade</label>
             <div class="crans" id="l-taxe" role="radiogroup" aria-label="Creator tax on each trade">
@@ -150,7 +155,7 @@
             <div><dt>Pons launch fee</dt><dd id="t-frais">—</dd></div>
             <div><dt>Your first buy</dt><dd id="t-achat">0 ETH</dd></div>
             <div><dt>Network fee, estimate</dt><dd id="t-gaz">—</dd></div>
-            <div><dt>Udenhood fee</dt><dd>0 ETH</dd></div>
+            <div><dt>Udenhood fee</dt><dd>0 <span class="eth">ETH</span></dd></div>
             <div class="total"><dt>Total</dt><dd id="t-total">—</dd></div>
           </dl>
           <p class="recoit" id="t-jetons" hidden></p>
