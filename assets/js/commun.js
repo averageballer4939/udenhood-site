@@ -27,9 +27,95 @@ window.UH = (() => {
     return rep.json();
   }
 
+  // Un élément : el('a', { class: 'x', href: '…', text: '…' }, enfant, 'texte'). Jamais de HTML injecté.
+  function el(nom, props = {}, ...enfants) {
+    const e = document.createElement(nom);
+    for (const [k, v] of Object.entries(props)) {
+      if (v === false || v == null) continue;
+      if (k === 'text') e.textContent = v;
+      else if (k === 'class') e.className = v;
+      else if (k === 'data') Object.assign(e.dataset, v);
+      else if (k in e && k !== 'list' && k !== 'form') e[k] = v;
+      else e.setAttribute(k, v === true ? '' : v);
+    }
+    e.append(...enfants.flat().filter((x) => x != null && x !== false));
+    return e;
+  }
+
+  // Un mot en bas de l'écran, deux secondes : la réponse à un geste (copié, déconnecté).
+  let mot;
+  let fin;
+  function dire(texte) {
+    if (!mot) {
+      mot = el('p', { class: 'mot-bas', role: 'status' });
+      document.body.append(mot);
+    }
+    mot.textContent = texte;
+    mot.dataset.vu = 'false';
+    void mot.offsetWidth;
+    mot.dataset.vu = 'true';
+    clearTimeout(fin);
+    fin = setTimeout(() => {
+      mot.dataset.vu = 'false';
+    }, 2000);
+  }
+
+  async function copier(texte, message = 'Copied') {
+    try {
+      await navigator.clipboard.writeText(texte);
+      dire(message);
+      return true;
+    } catch {
+      dire('Your browser blocked the copy.');
+      return false;
+    }
+  }
+
+  // Pose une image venue d'ailleurs (le visuel d'un coin). liens : les adresses à essayer dans l'ordre. Si aucune
+  // ne s'affiche, l'image se retire et le cadre montre sa tuile de trame.
+  function poserImage(img, liens, cadre) {
+    const reste = [...liens];
+    const suivant = () => {
+      const lien = reste.shift();
+      if (lien) {
+        img.src = lien;
+        return;
+      }
+      img.hidden = true;
+      img.removeAttribute('src');
+      if (cadre) cadre.dataset.vide = 'true';
+    };
+    img.referrerPolicy = 'no-referrer';
+    img.onerror = suivant;
+    img.hidden = !reste.length;
+    if (cadre) cadre.dataset.vide = String(!reste.length);
+    suivant();
+  }
+
+  // Mémoire du navigateur : un brouillon, jamais une donnée qui compte. Illisible ou pleine, on s'en passe.
+  const memoire = {
+    lire(cle) {
+      try {
+        return JSON.parse(localStorage.getItem(cle) || 'null');
+      } catch {
+        return null;
+      }
+    },
+    ecrire(cle, v) {
+      try {
+        v == null ? localStorage.removeItem(cle) : localStorage.setItem(cle, JSON.stringify(v));
+      } catch {}
+    },
+  };
+
   return {
     lire,
     github,
+    el,
+    dire,
+    copier,
+    poserImage,
+    memoire,
     // Une lecture secondaire qui échoue rend null, sauf la limite de GitHub, qui arrête tout.
     ouVide: (p) => p.catch((e) => (e && e.genre === 'limite' ? Promise.reject(e) : null)),
     jours: (iso) => Math.floor((Date.now() - new Date(iso).getTime()) / JOUR),

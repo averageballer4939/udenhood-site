@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Launch from your repo · Udenhood</title>
-<meta name="description" content="Sign your GitHub repo with one file. Launch opens with the contracts. On Robinhood Chain.">
+<meta name="description" content="Sign your GitHub repo with one file, then launch its coin from the wallet the repo names. On Robinhood Chain, through Pons.">
 <meta name="theme-color" content="#0F1734">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -26,59 +26,160 @@
   </nav>
   <div class="actions">
     <a class="btn creer" href="launch.html" aria-current="page"><span class="btn-face"><img class="jeton" src="assets/cursors/piece@2x.png" width="64" height="64" alt="">Create</span></a>
+    <a class="btn nuit compte" href="connect.html" data-wallet data-etat="off" data-connexion="connect.html" data-compte="account.html" aria-label="Log in with your wallet"><span class="btn-face"><img class="w-ico" src="assets/icons/vault.png" width="256" height="256" alt=""><i class="w-lampe" aria-hidden="true"></i><span class="w-long">Log in</span><span class="w-bref">Log in</span></span></a>
     <a class="btn bleu surx" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
   </div>
 </header>
 <main id="main">
   <div class="page-tete">
     <h1 class="bd moyen"><span data-e="titre" class="d1"><span class="t3" data-t="Launch from">Launch from</span> <span class="t3 r" data-t="your repo">your repo</span></span></h1>
-    <p class="intro d2" data-e="bas">Three steps. The first two work today. The third opens with the contracts.</p>
+    <p class="intro d2" data-e="bas">Paste your repo: Udenhood fills the coin from it. Then three clicks: log in, sign, launch.</p>
   </div>
   <div class="atelier">
-    <form id="signer" novalidate>
+    <form id="lancer" novalidate>
       <ol class="etapes">
-        <li class="etape d2" data-e="bas">
+        <li class="etape d2" data-e="bas" id="e-depot" data-fait="false">
           <h2>Paste your repo</h2>
-          <p id="s-depot" role="status">Any public GitHub repo.</p>
-          <label class="sr" for="s-repo">Your repo, as owner/repo</label>
+          <p id="l-depot" role="status">Any public GitHub repo.</p>
+          <label class="sr" for="l-repo">Your repo, as owner/repo</label>
           <div class="field">
             <span class="field-pre" aria-hidden="true">github.com/</span>
-            <input id="s-repo" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="owner/repo">
+            <input id="l-repo" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="owner/repo">
           </div>
         </li>
-        <li class="etape d3" data-e="bas">
-          <h2>Add the proof file</h2>
-          <p>Your wallet and your ticker go in one file. GitHub opens with it ready. You commit it yourself.</p>
-          <label for="s-wallet">Your wallet on Robinhood Chain</label>
-          <div class="field">
-            <input id="s-wallet" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="42" placeholder="0x…">
+        <li class="etape d3" data-e="bas" id="e-coin" data-fait="false">
+          <h2>Check the coin</h2>
+          <p id="l-coin-note">Filled from your repo. Change what you want now: after launch nothing can be edited.</p>
+          <div class="paire">
+            <div>
+          <label for="l-nom">Name</label>
+          <div class="field"><input id="l-nom" type="text" autocomplete="off" spellcheck="false" maxlength="64" placeholder="Your project"></div>
+
+            </div>
+            <div>
+          <label for="l-ticker">Ticker</label>
+          <div class="field"><span class="field-pre" aria-hidden="true">$</span><input id="l-ticker" type="text" autocomplete="off" spellcheck="false" autocapitalize="characters" maxlength="10" placeholder="COIN"></div>
+
+            </div>
           </div>
-          <label for="s-ticker">Ticker</label>
-          <div class="field court">
-            <span class="field-pre" aria-hidden="true">$</span>
-            <input id="s-ticker" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="10" placeholder="COIN">
+          <label for="l-texte">What the project does</label>
+          <div class="field haut"><textarea id="l-texte" rows="3" spellcheck="true" placeholder="One or two plain sentences."></textarea></div>
+          <p class="aide" id="l-texte-aide">Udenhood adds one line at the end: the link to your repo.</p>
+          <label for="l-image">Image link</label>
+          <div class="field"><input id="l-image" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
+          <p class="aide">A square image, by https or ipfs. Empty, it is your GitHub picture.</p>
+          <details class="plus">
+            <summary>Links, first buy, creator tax</summary>
+          <label for="l-site">Website</label>
+          <div class="field"><input id="l-site" type="text" autocomplete="off" spellcheck="false" inputmode="url" autocapitalize="off" placeholder="https://…"></div>
+
+          <label for="l-x">X account</label>
+          <div class="field"><span class="field-pre" aria-hidden="true">x.com/</span><input id="l-x" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="40" placeholder="handle"></div>
+
+          <label for="l-achat">Your first buy, in ETH</label>
+          <div class="field court"><input id="l-achat" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" maxlength="12" placeholder="0"></div>
+          <p class="aide">Your wallet buys its own coin inside the launch transaction. Anyone can see it.</p>
+            <label for="l-taxe">Creator tax on each trade</label>
+            <div class="crans" id="l-taxe" role="radiogroup" aria-label="Creator tax on each trade">
+              <button type="button" role="radio" aria-checked="true" data-pb="0">0 %</button>
+              <button type="button" role="radio" aria-checked="false" data-pb="100">1 %</button>
+              <button type="button" role="radio" aria-checked="false" data-pb="200">2 %</button>
+              <button type="button" role="radio" aria-checked="false" data-pb="300">3 %</button>
+              <button type="button" role="radio" aria-checked="false" data-pb="500">5 %</button>
+            </div>
+            <p class="aide">Paid to your wallet on every trade, on top of the Pons trading fee. Shown on the coin page.</p>
+          </details>
+        </li>
+        <li class="etape d4" data-e="bas" id="e-preuve" data-fait="false">
+          <h2>Log in and sign</h2>
+          <p id="l-wallet" role="status">Your wallet launches the coin. One file in your repo names that wallet and the coin.</p>
+          <div id="l-dans" hidden>
+        <div class="identite">
+          <img class="id-ico" data-w="ico" src="assets/icons/vault.png" width="256" height="256" alt="">
+          <div class="id-txt"><p class="id-nom" data-w="nom">Wallet</p><p class="id-adr" data-w="court">0x…</p></div>
+          <span class="reseau" data-w="reseau" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Not logged in</span></span>
+        </div>
           </div>
-          <button class="btn" type="submit" id="s-go"><span class="btn-face">Add proof file</span></button>
-          <p class="note" id="s-note" role="status">Nothing is stored. Your browser talks to GitHub.</p>
-        </li>
-        <li class="etape ferme d4" data-e="bas">
-          <h2>Launch <span class="pill">In build</span></h2>
-          <p>The coin goes live with its proof card.</p>
-          <button class="btn" type="button" disabled><span class="btn-face">Launch</span></button>
-        </li>
-      </ol>
-    </form>
-    <aside class="cote d3" data-e="bas">
-      <figure class="fichier" >
+          <div class="rang">
+            <button class="btn bleu" type="button" id="l-login" data-login><span class="btn-face">Log in</span></button>
+            <button class="btn" type="button" id="l-changer" hidden><span class="btn-face">Switch to Robinhood Chain</span></button>
+            <button class="btn" type="button" id="l-ajouter" disabled><span class="btn-face">Sign on GitHub</span></button>
+          </div>
+          <p class="etat-ligne" id="l-preuve" role="status" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Paste your repo and log in first.</span></p>
+          <details class="plus" id="l-fichier">
+            <summary>See the file</summary>
+            <figure class="fichier" >
         <figcaption><img src="assets/icons/proofFile.png" width="256" height="256" alt=""> udenhood.json</figcaption>
-        <pre id="s-apercu">{
+        <pre id="l-apercu">{
   "udenhood": <b>1</b>,
   "chain": <b>4663</b>,
   "wallet": <i>"0x…"</i>,
   "ticker": <i>"COIN"</i>
 }</pre>
       </figure>
-      <p class="limite">The file says the repo is yours. Remove it from the repo and the Owner light goes off.</p>
+            <div class="rang">
+              <button class="mini" type="button" id="l-verifier" disabled>Check again</button>
+              <button class="mini" type="button" id="l-copier">Copy the file</button>
+            </div>
+          </details>
+        </li>
+      </ol>
+    </form>
+    <aside class="cote d3" data-e="bas" aria-label="Your launch">
+      <div class="ticket" id="ticket" data-vue="avant">
+        <div class="vue v-avant">
+          <div class="ticket-coin">
+            <span class="coin-img petit" id="t-cadre" data-vide="true"><img id="t-img" alt="" width="64" height="64" hidden></span>
+            <div><p class="ticket-nom" id="t-nom">Your coin</p><p class="ticket-sous"><span id="t-ticker">$COIN</span> · <span id="t-depot">no repo yet</span></p></div>
+          </div>
+          <ul class="liste-etat" id="t-liste">
+            <li data-k="depot" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Repo found</span></li>
+            <li data-k="coin" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>The coin has a name and a ticker</span></li>
+            <li data-k="wallet" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Logged in on Robinhood Chain</span></li>
+            <li data-k="preuve" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>The repo names your wallet and this coin</span></li>
+            <li data-k="pons" data-etat="wait"><i class="lampe" aria-hidden="true"></i><span id="t-pons">Asking Pons…</span></li>
+          </ul>
+          <dl class="couts" id="t-couts">
+            <div><dt>Pons launch fee</dt><dd id="t-frais">—</dd></div>
+            <div><dt>Your first buy</dt><dd id="t-achat">0 ETH</dd></div>
+            <div><dt>Network fee, estimate</dt><dd id="t-gaz">—</dd></div>
+            <div><dt>Udenhood fee</dt><dd>0 ETH</dd></div>
+            <div class="total"><dt>Total</dt><dd id="t-total">—</dd></div>
+          </dl>
+          <p class="recoit" id="t-jetons" hidden></p>
+          <button class="btn large" type="button" id="t-lancer" disabled><span class="btn-face">Launch the coin</span></button>
+          <p class="note" id="t-note" role="status">Paste your repo.</p>
+          <p class="petit-texte">The coin is created by Pons v2 contracts, which are unaudited. Udenhood adds no contract and takes no fee. A coin can go to zero.</p>
+        </div>
+        <div class="vue v-envoi">
+          <p class="ticket-titre">Launching…</p>
+          <ol class="liste-etat" id="t-suivi">
+            <li data-k="signe" data-etat="wait"><i class="lampe" aria-hidden="true"></i><span>Confirm in your wallet</span></li>
+            <li data-k="envoye" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Sent to Robinhood Chain</span></li>
+            <li data-k="confirme" data-etat="off"><i class="lampe" aria-hidden="true"></i><span>Confirmed on chain</span></li>
+          </ol>
+          <p class="note" id="t-suivi-note" role="status"></p>
+          <a class="mini" id="t-tx" href="https://robinhoodchain.blockscout.com" rel="noopener" target="_blank" hidden>See the transaction</a>
+          <button class="mini" type="button" id="t-retour" hidden>Back to the form</button>
+        </div>
+        <div class="vue v-fini">
+          <img class="ticket-coq" src="assets/brand/coq-lance.png" width="722" height="560" alt="The rooster pats the closed hood of the blue car and gives a thumbs-up" loading="lazy">
+          <p class="ticket-titre bd petit"><span class="t3" data-t="Your coin is live">Your coin is live</span></p>
+          <p class="ticket-sous"><span id="f-nom">Coin</span> · <span class="adr" id="f-adr">0x…</span></p>
+          <div class="rang">
+            <a class="btn" id="f-page" href="coins.html"><span class="btn-face">Open its page</span></a>
+            <a class="btn nuit pons" id="f-pons" href="https://www.ponsfamily.com/launchpad" rel="noopener" target="_blank"><span class="btn-face"><img class="logo-tiers" src="assets/brand/pons.png" width="256" height="256" alt="">Trade on Pons</span></a>
+          </div>
+          <div class="epingle">
+            <p class="epingle-t">Signed and launched</p>
+            <p>Your repo named this coin before it existed, so its Owner light is on. To show it in the Coins list, add the topic <b>udenhood</b> to your repo: About, the gear, Topics.</p>
+            <div class="rang">
+              <a class="mini" id="f-depot" href="https://github.com" rel="noopener" target="_blank">Open your repo</a>
+              <a class="mini" id="f-tx" href="https://robinhoodchain.blockscout.com" rel="noopener" target="_blank">See the transaction</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </aside>
   </div>
 </main>
@@ -95,25 +196,30 @@
     <nav class="pied-col" aria-label="Product">
       <h2>Product</h2>
       <a href="index.html#check">Check a repo</a>
-      <a href="launch.html">Launch</a>
+      <a href="launch.html">Launch a coin</a>
       <a href="coins.html">Coins</a>
+      <a href="account.html">Your account</a>
     </nav>
     <nav class="pied-col" aria-label="Docs">
       <h2>Docs</h2>
       <a href="docs/index.html">Start here</a>
       <a href="docs/owner.html">The four lights</a>
-      <a href="docs/sign.html">Sign your repo</a>
+      <a href="docs/launch.html">Launch a coin</a>
+      <a href="docs/costs.html">Costs</a>
       <a href="docs/limits.html">Limits</a>
     </nav>
     <img class="pied-coq" src="assets/brand/coq-pied.png" width="489" height="460" alt="" loading="lazy">
   </div>
   <div class="pied-bas">
-    <p>Checks work today. Launch is in build, on Robinhood Chain.</p>
-    <p>Not affiliated with Robinhood or GitHub.</p>
+    <p>Coins launch on Pons v2 contracts, on Robinhood Chain. Those contracts are unaudited.</p>
+    <p>Not affiliated with Robinhood, GitHub or Pons.</p>
   </div>
 </footer>
 <script src="assets/js/site.js" defer></script>
 <script src="assets/js/commun.js" defer></script>
-<script src="assets/js/signer.js" defer></script>
+<script src="assets/js/chaine.js" defer></script>
+<script src="assets/js/wallet.js" defer></script>
+<script src="assets/js/preuve.js" defer></script>
+<script src="assets/js/lancer.js" defer></script>
 </body>
 </html>

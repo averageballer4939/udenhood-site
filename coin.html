@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coin · Udenhood</title>
+<meta name="description" content="Chart, trades and proof card of a coin: buy or sell it on its curve from your wallet, and see the repo behind it.">
+<meta name="theme-color" content="#0F1734">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/titre.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/coin.css">
+<script src="assets/js/entree.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Udenhood, home"><img class="mot" src="assets/brand/logo-udenhood.png" width="1200" height="253" alt="Udenhood"><img class="signe" src="assets/brand/u-64.png" width="128" height="120" alt=""></a>
+  <nav class="nav" aria-label="Main">
+    <a class="n-check" href="index.html">Check</a>
+    <a class="n-launch" href="launch.html">Launch</a>
+    <a class="n-coins" href="coins.html" aria-current="page">Coins</a>
+    <a class="n-docs" href="docs/index.html">Docs</a>
+  </nav>
+  <div class="actions">
+    <a class="btn creer" href="launch.html"><span class="btn-face"><img class="jeton" src="assets/cursors/piece@2x.png" width="64" height="64" alt="">Create</span></a>
+    <a class="btn nuit compte" href="connect.html" data-wallet data-etat="off" data-connexion="connect.html" data-compte="account.html" aria-label="Log in with your wallet"><span class="btn-face"><img class="w-ico" src="assets/icons/vault.png" width="256" height="256" alt=""><i class="w-lampe" aria-hidden="true"></i><span class="w-long">Log in</span><span class="w-bref">Log in</span></span></a>
+    <a class="btn bleu surx" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
+  </div>
+</header>
+<main id="main">
+  <article class="coin tm" id="k" data-etat="charge">
+    <header class="tm-tete d1" data-e="bloc">
+      <span class="coin-img tm-img" id="k-cadre" data-vide="true"><img id="k-img" alt="" width="72" height="72" hidden></span>
+      <div class="tm-nom">
+        <h1 class="tm-titre" id="k-nom">Reading the chain…</h1>
+        <p class="tm-sous"><span class="ticker" id="k-ticker">$…</span><span class="pill" id="k-phase">…</span><button class="tm-adr" type="button" id="k-copier" aria-label="Copy the coin address"><span id="k-adr">0x…</span><i aria-hidden="true">Copy</i></button></p>
+      </div>
+      <dl class="tm-cles">
+        <div><dt>Market cap</dt><dd id="k-cap">—</dd></div>
+        <div><dt>Price</dt><dd id="k-prix">—</dd></div>
+        <div><dt>Creator tax</dt><dd id="k-taxe">—</dd></div>
+      </dl>
+      <div class="rang tm-liens" id="k-liens">
+        <a class="mini" id="k-explo" href="https://robinhoodchain.blockscout.com" rel="noopener" target="_blank">Explorer</a>
+        <a class="btn nuit pons" id="k-pons" href="https://www.ponsfamily.com/launchpad" rel="noopener" target="_blank"><span class="btn-face"><img class="logo-tiers" src="assets/brand/pons.png" width="256" height="256" alt="">Trade on Pons</span></a>
+      </div>
+    </header>
+
+    <div class="tm-grille">
+      <section class="tm-carte tm-graphe d2" data-e="bas" aria-label="Price chart">
+        <div class="tm-barre">
+          <div class="crans tm-crans" id="g-pas" role="radiogroup" aria-label="Candle size">
+            <button type="button" role="radio" aria-checked="true" data-pas="60">1m</button>
+            <button type="button" role="radio" aria-checked="false" data-pas="300">5m</button>
+            <button type="button" role="radio" aria-checked="false" data-pas="900">15m</button>
+            <button type="button" role="radio" aria-checked="false" data-pas="3600">1h</button>
+          </div>
+          <div class="crans tm-crans" id="g-unite" role="radiogroup" aria-label="Value shown">
+            <button type="button" role="radio" aria-checked="true" data-unite="cap">Mcap</button>
+            <button type="button" role="radio" aria-checked="false" data-unite="prix">Price</button>
+          </div>
+          <p class="tm-legende" id="g-legende" aria-hidden="true"></p>
+          <div class="tm-zoom">
+            <button class="mini" type="button" id="g-moins" aria-label="Show more candles">&#8722;</button>
+            <button class="mini" type="button" id="g-plus" aria-label="Show fewer candles">+</button>
+          </div>
+        </div>
+        <div class="graphe" id="graphe" data-etat="charge">
+          <canvas id="g-toile" tabindex="0" role="img" aria-label="Candle chart of the coin on its curve. Arrow keys move through time."></canvas>
+          <div class="graphe-mot"><p id="g-mot">Reading the trades…</p><button class="mini" type="button" id="g-encore" hidden>Try again</button></div>
+        </div>
+      </section>
+
+      <aside class="tm-carte tm-panneau d3" data-e="bas" aria-label="Trade this coin">
+        <div class="tm-onglets" role="tablist" aria-label="Side">
+          <button type="button" role="tab" id="m-acheter" aria-selected="true" data-sens="achat">Buy</button>
+          <button type="button" role="tab" id="m-vendre" aria-selected="false" data-sens="vente">Sell</button>
+        </div>
+        <div class="tm-corps" id="m-corps" data-sens="achat">
+          <div class="tm-ligne"><label for="m-montant" id="m-label">You pay</label><button class="tm-solde" type="button" id="m-solde" aria-label="Use your whole balance">Balance —</button></div>
+          <div class="field tm-champ"><input id="m-montant" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="0"><span class="field-pre" id="m-unite">ETH</span></div>
+          <div class="crans tm-rapides" id="m-rapides" aria-label="Quick amounts"></div>
+          <dl class="couts tm-devis">
+            <div class="total"><dt>You get</dt><dd id="m-recu">—</dd></div>
+            <div><dt>Minimum, after tolerance</dt><dd id="m-min">—</dd></div>
+            <div><dt>Price impact</dt><dd id="m-impact">—</dd></div>
+            <div><dt>Pons trading fee</dt><dd id="m-frais">—</dd></div>
+            <div><dt>Creator tax</dt><dd id="m-taxe">—</dd></div>
+            <div><dt>Network fee, estimate</dt><dd id="m-gaz">—</dd></div>
+          </dl>
+          <div class="tm-ligne tm-tol"><span>Price tolerance</span>
+            <div class="crans tm-crans" id="m-tol" role="radiogroup" aria-label="Price tolerance">
+              <button type="button" role="radio" aria-checked="false" data-pb="100">1 %</button>
+              <button type="button" role="radio" aria-checked="true" data-pb="300">3 %</button>
+              <button type="button" role="radio" aria-checked="false" data-pb="500">5 %</button>
+            </div>
+          </div>
+          <button class="btn large" type="button" id="m-go" disabled><span class="btn-face">Reading the curve…</span></button>
+          <p class="note" id="m-note" role="status"></p>
+          <ol class="liste-etat tm-suivi" id="m-suivi" hidden></ol>
+          <a class="mini" id="m-tx" href="https://robinhoodchain.blockscout.com" rel="noopener" target="_blank" hidden>See the transaction</a>
+        </div>
+        <div class="tm-ferme" id="m-ferme" hidden>
+          <p id="m-ferme-t">This coin left its curve. It trades in a pool now.</p>
+          <a class="btn nuit pons" id="m-pons" href="https://www.ponsfamily.com/launchpad" rel="noopener" target="_blank"><span class="btn-face"><img class="logo-tiers" src="assets/brand/pons.png" width="256" height="256" alt="">Trade on Pons</span></a>
+        </div>
+        <p class="petit-texte">Trades go from your wallet to the coin's Pons v2 curve. Those contracts are unaudited. Udenhood takes no fee. A coin can go to zero.</p>
+      </aside>
+
+      <section class="tm-carte tm-echanges d4" data-e="bas" aria-labelledby="t-ech">
+        <h2 class="tm-t" id="t-ech">Trades</h2>
+        <div class="tm-defile">
+          <table class="tm-table">
+            <thead><tr><th scope="col">Time</th><th scope="col">Side</th><th scope="col">ETH</th><th scope="col">Coins</th><th scope="col">Wallet</th></tr></thead>
+            <tbody id="e-lignes"></tbody>
+          </table>
+        </div>
+        <p class="tm-mot" id="e-mot">Reading the trades…</p>
+      </section>
+
+      <section class="tm-carte tm-infos d4" data-e="bas" aria-labelledby="t-infos">
+        <h2 class="tm-t" id="t-infos">About</h2>
+        <p class="tm-texte" id="k-texte"></p>
+        <dl class="chiffres tm-chiffres">
+          <div class="large"><dt>On the curve</dt><dd><span id="k-leve">—</span><span class="jauge" aria-hidden="true"><i id="k-jauge"></i></span></dd></div>
+          <div><dt>Launched by</dt><dd><a id="k-createur" href="https://robinhoodchain.blockscout.com" rel="noopener" target="_blank">—</a></dd></div>
+          <div><dt>Repo</dt><dd><a id="k-depot" href="index.html">—</a></dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <div class="coin-absent">
+      <h1 class="bd moyen"><span class="t3" data-t="No coin">No coin</span> <span class="t3 r" data-t="at this address">at this address</span></h1>
+      <p class="intro" id="k-absent">This address is not a coin launched on Pons.</p>
+      <div class="rang"><a class="btn" href="coins.html"><span class="btn-face">See the coins</span></a><button class="btn bleu" type="button" id="k-encore"><span class="btn-face">Try again</span></button></div>
+    </div>
+  </article>
+
+  <section class="bloc" id="card" aria-labelledby="t-card">
+    <div class="tag" data-v="gauche">
+      <img src="assets/icons/proofFile.png" width="256" height="256" alt="">
+      <h2 class="bd petit" id="t-card"><span class="t3" data-t="Proof card">Proof card</span></h2>
+    </div>
+    <figure class="carte">
+    <figcaption class="cible" id="cible" aria-live="polite">Waiting for the coin.</figcaption>
+    <ol class="lights" id="lights">
+      <li data-v="pop" class="d1">
+        <button class="light" type="button" data-k="owner" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofOwner.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Owner</span>
+          <span class="light-line">The repo signs the coin.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d2">
+        <button class="light" type="button" data-k="history" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofHistory.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">History</span>
+          <span class="light-line">Built over time, not overnight.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d3">
+        <button class="light" type="button" data-k="running" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofRunning.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Running</span>
+          <span class="light-line">It is live. We ping it.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d4">
+        <button class="light" type="button" data-k="shipping" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofShipping.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Shipping</span>
+          <span class="light-line">The team keeps pushing.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+    </ol>
+    </figure>
+    <p class="limite">The card shows that a project exists, runs and ships. It does not say the project is good, or that its coin is worth anything.</p>
+  </section>
+</main>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-t">
+  <img id="pop-i" src="assets/icons/proofOwner.png" width="256" height="256" alt="">
+  <h2 class="bd petit" id="pop-t">Owner</h2>
+  <p id="pop-l">The repo signs the coin.</p>
+  <p class="pop-d" id="pop-d">Paste a repo to check.</p>
+  <a class="pop-a" id="pop-a" href="https://github.com" rel="noopener" hidden>See the raw proof</a>
+  <button class="btn" type="button" id="pop-x"><span class="btn-face">Got it</span></button>
+</dialog>
+<footer class="pied">
+  <div class="pied-haut">
+    <div class="pied-marque">
+      <a class="pied-logo" href="index.html" aria-label="Udenhood, home"><img src="assets/brand/logo-udenhood.png" width="1200" height="253" alt="Udenhood" loading="lazy"></a>
+      <p>Pop the hood on any coin.</p>
+      <div class="touches">
+        <a class="btn clair touche" href="https://github.com/averageballer4939/udenhood-site" rel="noopener" aria-label="Udenhood on GitHub"><span class="btn-face"><img src="assets/brand/github-invertocat.svg" width="128" height="128" alt=""></span></a>
+        <a class="btn bleu touche" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img class="x" src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
+      </div>
+    </div>
+    <nav class="pied-col" aria-label="Product">
+      <h2>Product</h2>
+      <a href="index.html#check">Check a repo</a>
+      <a href="launch.html">Launch a coin</a>
+      <a href="coins.html">Coins</a>
+      <a href="account.html">Your account</a>
+    </nav>
+    <nav class="pied-col" aria-label="Docs">
+      <h2>Docs</h2>
+      <a href="docs/index.html">Start here</a>
+      <a href="docs/owner.html">The four lights</a>
+      <a href="docs/launch.html">Launch a coin</a>
+      <a href="docs/costs.html">Costs</a>
+      <a href="docs/limits.html">Limits</a>
+    </nav>
+    <img class="pied-coq" src="assets/brand/coq-pied.png" width="489" height="460" alt="" loading="lazy">
+  </div>
+  <div class="pied-bas">
+    <p>Coins launch on Pons v2 contracts, on Robinhood Chain. Those contracts are unaudited.</p>
+    <p>Not affiliated with Robinhood, GitHub or Pons.</p>
+  </div>
+</footer>
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/commun.js" defer></script>
+<script src="assets/js/chaine.js" defer></script>
+<script src="assets/js/wallet.js" defer></script>
+<script src="assets/js/preuve.js" defer></script>
+<script src="assets/js/marche.js" defer></script>
+<script src="assets/js/graphe.js" defer></script>
+<script src="assets/js/coin.js" defer></script>
+</body>
+</html>

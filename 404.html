@@ -6,7 +6,7 @@
 <title>Nothing under this hood · Udenhood</title>
 <meta name="description" content="This page does not exist.">
 <meta name="theme-color" content="#0F1734">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -26,6 +26,7 @@
   </nav>
   <div class="actions">
     <a class="btn creer" href="/launch.html"><span class="btn-face"><img class="jeton" src="/assets/cursors/piece@2x.png" width="64" height="64" alt="">Create</span></a>
+    <a class="btn nuit compte" href="/connect.html" data-wallet data-etat="off" data-connexion="/connect.html" data-compte="/account.html" aria-label="Log in with your wallet"><span class="btn-face"><img class="w-ico" src="/assets/icons/vault.png" width="256" height="256" alt=""><i class="w-lampe" aria-hidden="true"></i><span class="w-long">Log in</span><span class="w-bref">Log in</span></span></a>
     <a class="btn bleu surx" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img src="/assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
   </div>
 </header>
@@ -56,23 +57,28 @@
     <nav class="pied-col" aria-label="Product">
       <h2>Product</h2>
       <a href="/index.html#check">Check a repo</a>
-      <a href="/launch.html">Launch</a>
+      <a href="/launch.html">Launch a coin</a>
       <a href="/coins.html">Coins</a>
+      <a href="/account.html">Your account</a>
     </nav>
     <nav class="pied-col" aria-label="Docs">
       <h2>Docs</h2>
       <a href="/docs/index.html">Start here</a>
       <a href="/docs/owner.html">The four lights</a>
-      <a href="/docs/sign.html">Sign your repo</a>
+      <a href="/docs/launch.html">Launch a coin</a>
+      <a href="/docs/costs.html">Costs</a>
       <a href="/docs/limits.html">Limits</a>
     </nav>
     <img class="pied-coq" src="/assets/brand/coq-pied.png" width="489" height="460" alt="" loading="lazy">
   </div>
   <div class="pied-bas">
-    <p>Checks work today. Launch is in build, on Robinhood Chain.</p>
-    <p>Not affiliated with Robinhood or GitHub.</p>
+    <p>Coins launch on Pons v2 contracts, on Robinhood Chain. Those contracts are unaudited.</p>
+    <p>Not affiliated with Robinhood, GitHub or Pons.</p>
   </div>
 </footer>
 <script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/commun.js" defer></script>
+<script src="/assets/js/chaine.js" defer></script>
+<script src="/assets/js/wallet.js" defer></script>
 </body>
 </html>

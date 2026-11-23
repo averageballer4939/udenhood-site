@@ -40,6 +40,7 @@ body { margin: 0; min-height: 100vh; overflow-x: hidden; }
 img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--ciel); outline-offset: 3px; border-radius: 6px; }
+[hidden] { display: none !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skip { position: absolute; left: 12px; top: -60px; z-index: 20; padding: 10px 14px; border-radius: var(--r-pastille); background: var(--ink); color: var(--bg); font-weight: 700; text-decoration: none; }
 .skip:focus { top: 12px; }
@@ -335,4 +336,280 @@ html.js [data-v].vu { opacity: 1; translate: none; scale: none; rotate: none; fi
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Compte, wallet, lancement, coin ---------- */
+/* Pièces partagées : une rangée de boutons, un petit bouton secondaire, un voyant, le mot du bas de l'écran. */
+.rang { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.mini { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 2px solid var(--line); border-radius: var(--r-pastille); background: var(--bg); color: var(--ink-2); font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: color .2s ease-out, border-color .2s ease-out, transform .16s var(--sortie); }
+.mini:hover { color: var(--ink); border-color: var(--ink-3); transform: translateY(-2px); transition: color .2s ease-out, border-color .2s ease-out, transform .22s var(--ressort); }
+.mini:active { transform: translateY(1px); transition: transform .09s linear; }
+.mini[disabled] { border-style: dashed; color: var(--ink-3); transform: none; }
+.lampe { flex: none; display: inline-block; width: 14px; height: 14px; border: 2px solid var(--bg); border-radius: 50%; background: var(--line); box-shadow: 0 0 0 2px var(--line); }
+[data-etat="on"] > .lampe { background: var(--or); box-shadow: 0 0 0 2px var(--or-fonce); animation: allume .26s var(--ressort) both; }
+[data-etat="half"] > .lampe { background: linear-gradient(90deg, var(--or) 0 50%, var(--line) 50% 100%); box-shadow: 0 0 0 2px var(--or-fonce); }
+[data-etat="wait"] > .lampe, .lampe[data-etat="wait"] { background: var(--ciel); box-shadow: 0 0 0 2px var(--ink-3); animation: clignote .7s steps(2, jump-none) infinite; }
+[data-etat="faux"] > .lampe, [data-etat="bad"] > .lampe { background: var(--corail); box-shadow: 0 0 0 2px var(--bordeaux); animation: allume .26s var(--ressort) both; }
+[data-etat="off"] > .lampe { background: var(--bg); box-shadow: 0 0 0 2px var(--ink-3); }
+.etat-ligne { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; font: 500 13px/1.45 var(--mono); letter-spacing: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.etat-ligne[data-etat="on"], .etat-ligne[data-etat="faux"], .etat-ligne[data-etat="bad"] { color: var(--ink); }
+.etat-ligne a { color: var(--ink); text-underline-offset: 4px; }
+.mot-bas { position: fixed; left: 50%; bottom: 24px; z-index: 70; margin: 0; padding: 11px 16px; border: 2px solid var(--bg); outline: 1px solid var(--line); border-radius: var(--r-pastille); background: var(--ink); color: var(--bg); font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; translate: -50% 20px; opacity: 0; filter: blur(3px); pointer-events: none; transition: opacity .16s var(--sortie), translate .16s var(--sortie), filter .16s var(--sortie); }
+.mot-bas[data-vu="true"] { opacity: 1; translate: -50% 0; filter: none; transition: opacity .24s ease-out, translate .32s var(--ressort), filter .24s ease-out; }
+.vue { display: none; }
+[data-vue="cherche"] > .v-cherche, [data-vue="choix"] > .v-choix, [data-vue="aucun"] > .v-aucun, [data-vue="reseau"] > .v-reseau, [data-vue="dedans"] > .v-dedans, [data-vue="avant"] > .v-avant, [data-vue="envoi"] > .v-envoi, [data-vue="fini"] > .v-fini { display: block; animation: vue .28s ease-out both; }
+@keyframes vue { from { opacity: 0; translate: 0 10px; filter: blur(3px); } to { opacity: 1; translate: none; filter: none; } }
+.logo-tiers { display: inline-block; width: 20px; height: 20px; margin: -3px 8px -3px -2px; vertical-align: middle; }
+
+/* Le compte dans la barre du haut : un bouton sombre. Hors ligne « Log in » ; en ligne, le signe que le wallet
+   déclare, son adresse courte et un voyant : or sur Robinhood Chain, corail sur un autre réseau. */
+.btn.nuit { background: var(--line); }
+.btn.nuit .btn-face { background: var(--surface); box-shadow: inset 0 0 0 2px var(--ink-3); color: var(--ink); }
+.compte .btn-face { gap: 8px; padding: 0 13px 0 8px; }
+.compte[data-etat="on"] .btn-face, .compte[data-etat="faux"] .btn-face { font: 500 12px/1 var(--mono); letter-spacing: 0; text-transform: none; }
+.compte[aria-current="page"] .btn-face { transform: translateY(3px); }
+.w-ico { width: 24px; height: 24px; transform: rotate(-6deg); transition: transform .16s var(--sortie); }
+.w-ico.vrai { width: 22px; height: 22px; border-radius: 6px; transform: none; }
+.compte:hover .w-ico { transform: rotate(6deg) scale(1.12); transition: transform .24s var(--ressort); }
+.w-lampe { display: none; width: 9px; height: 9px; border-radius: 50%; background: var(--or); box-shadow: 0 0 0 2px var(--or-fonce); }
+.compte[data-etat="on"] .w-lampe, .compte[data-etat="faux"] .w-lampe { display: block; }
+.compte[data-etat="faux"] .w-lampe { background: var(--corail); box-shadow: 0 0 0 2px var(--bordeaux); animation: clignote .7s steps(2, jump-none) infinite; }
+.w-bref { display: none; }
+
+/* Qui est connecté : le signe du wallet, son nom, son adresse courte, le réseau. */
+.identite { display: flex; align-items: center; gap: 12px; max-width: 520px; padding: 10px 14px 10px 10px; border: 2px solid var(--line); border-radius: var(--r-btn); background: var(--bg); }
+.id-ico { flex: none; width: 40px; height: 40px; border-radius: 10px; }
+.id-txt { min-width: 0; }
+.id-nom { margin: 0; font: 400 18px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.identite .id-adr { margin: 3px 0 0; font: 500 12px/1 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.reseau { display: flex; align-items: center; gap: 8px; margin-left: auto; font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-align: right; color: var(--ink-2); }
+.reseau[data-etat="on"] { color: var(--ink); }
+
+/* Log in : une case en deux volets. À gauche le guichet, à droite le coq et sa clef. */
+.porte { position: relative; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); min-height: 580px; margin-top: 40px; border: 2px solid var(--bg); outline: 1px solid var(--line); border-radius: var(--r-case); background: var(--surface) radial-gradient(circle at center, rgba(166, 190, 244, .09) 0 1.6px, rgba(166, 190, 244, 0) 1.8px) 0 0 / 9px 9px; overflow: hidden; }
+.porte-copy { position: relative; z-index: 2; padding: 44px clamp(20px, 4vw, 52px) 40px; }
+.porte-copy .intro { margin-top: 14px; }
+.porte-art { position: relative; border-left: 2px solid var(--bg); background: var(--royal) repeating-conic-gradient(from 6deg at 50% 78%, rgba(166, 190, 244, .2) 0 6deg, rgba(166, 190, 244, 0) 6deg 18deg); overflow: hidden; }
+.porte-art .eclat-b { right: auto; left: 50%; bottom: -8%; width: min(560px, 124%); translate: -50% 0; }
+.porte-art .eclat-a { right: auto; left: 50%; bottom: 0; width: min(460px, 102%); translate: -50% 0; }
+.porte-art .e1 { left: 12%; top: 12%; }
+.porte-art .e2 { left: 80%; top: 30%; }
+.porte-coq { position: absolute; left: 50%; bottom: -14px; height: 86%; translate: -50% 0; transform-origin: 50% 100%; transition: rotate .16s var(--sortie), scale .16s var(--sortie); }
+.porte-coq .coq { width: auto; height: 100%; max-width: none; transform-origin: 50% 100%; }
+@media (hover: hover) {
+  .porte:hover .porte-coq { rotate: 2.5deg; scale: 1.04; transition: rotate .34s var(--ressort), scale .34s var(--ressort); }
+  .porte:hover .eclat { scale: 1.07; transition: scale .34s var(--ressort); }
+}
+.rail { display: flex; flex-wrap: wrap; gap: 6px 0; margin: 22px 0 0; padding: 0; list-style: none; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.rail li { display: flex; align-items: center; gap: 8px; transition: color .2s ease-out; }
+.rail li + li::before { content: ""; width: 26px; height: 2px; margin: 0 6px 0 12px; background: var(--line); }
+.rail li[data-etat="on"], .rail li[data-etat="wait"] { color: var(--ink); }
+.guichet { max-width: 540px; margin-top: 18px; padding: 18px 18px 14px; border: 2px solid var(--line); border-radius: var(--r-case); background: var(--bg); }
+.guichet p { margin: 12px 0; font-size: 15px; color: var(--ink-2); }
+.guichet .g-titre { margin: 0 0 14px; font: 400 21px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.guichet .rang { margin-top: 14px; }
+.guichet .note { margin: 12px 0 0; color: var(--ink); }
+.guichet .note:empty { display: none; }
+.wallets { display: grid; gap: 12px; margin: 0; padding: 0 0 5px; list-style: none; }
+.w-choix { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; padding: 9px 14px 9px 9px; border: 2px solid var(--line); border-radius: var(--r-btn); background: var(--surface); box-shadow: 0 5px 0 var(--line); color: var(--ink); font: inherit; letter-spacing: inherit; text-align: left; transition: transform .16s var(--sortie), box-shadow .16s var(--sortie), border-color .2s ease-out; }
+.w-choix:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--line); border-color: var(--ink-3); transition: transform .22s var(--ressort), box-shadow .22s var(--ressort), border-color .2s ease-out; }
+.w-choix:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); transition: transform .09s linear, box-shadow .09s linear; }
+.w-choix img { width: 44px; height: 44px; border-radius: 10px; }
+.w-choix .w-nom { font: 400 19px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w-choix .w-geste { display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); transition: color .2s ease-out; }
+.w-choix:hover .w-geste { color: var(--ink); }
+.w-choix[data-etat="wait"] { border-color: var(--ciel); }
+.w-choix[disabled] { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); }
+.wallet.fantome { height: 66px; border: 2px solid var(--line); border-radius: var(--r-btn); background: var(--surface); animation: clignote 1.1s ease-in-out infinite alternate; }
+.wallet.fantome + .fantome { animation-delay: .25s; }
+.pistes { display: grid; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.pistes li { padding: 12px 14px; border-radius: var(--r-pastille); background: var(--surface); }
+.pistes b { display: block; margin-bottom: 4px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+/* Trois faits sur une seule bande, séparés par un trait : pas trois cartes. */
+.faits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 24px 0 0; padding: 0; border: 2px solid var(--line); border-radius: var(--r-case); background: var(--bg); list-style: none; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.faits li { padding: 18px 20px 20px; }
+.faits li + li { border-left: 2px solid var(--line); }
+.faits b { display: block; margin-bottom: 6px; font: 400 18px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+
+/* Account : la fiche du wallet, et ses coins. */
+.espace { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 20px; align-items: start; margin-top: 28px; min-height: 300px; }
+.fiche { padding: 20px 20px 22px; border: 2px solid var(--line); border-radius: var(--r-case); background: var(--surface) radial-gradient(circle at center, rgba(166, 190, 244, .09) 0 1.6px, rgba(166, 190, 244, 0) 1.8px) 0 0 / 9px 9px; }
+.fiche > p { margin: 0 0 16px; max-width: 34em; color: var(--ink-2); }
+.fiche-t { margin: 0 0 14px; font: 400 22px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; }
+.espace .a-hors, .espace .a-dans { display: none; }
+.espace[data-etat="hors"] .a-hors { display: block; grid-column: 1 / -1; max-width: 520px; animation: vue .28s ease-out both; }
+.espace[data-etat="dans"] .a-dans { display: block; animation: vue .28s ease-out both; }
+.fiche > .adresse { margin: 12px 0 12px; font: 500 13px/1.5 var(--mono); letter-spacing: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.chiffres { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+.chiffres > div { min-width: 0; padding: 12px 14px 13px; border-radius: var(--r-pastille); background: var(--bg); }
+.chiffres dt { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.chiffres dd { margin: 8px 0 0; font: 400 23px/1.1 var(--titre); letter-spacing: .01em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.chiffres dd small { font-size: .62em; letter-spacing: .04em; color: var(--ink-2); }
+.chiffres dd a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--ink-3); }
+.chiffres dd a:hover { text-decoration-color: var(--accent); }
+.reprise { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 12px 14px; border: 2px dashed var(--ink-3); border-radius: var(--r-btn); background: var(--bg); }
+.reprise p { margin: 0; font: 500 13px/1.4 var(--mono); letter-spacing: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.reprise b { display: block; font: 400 17px/1.2 var(--titre); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.mes-coins { display: grid; gap: 10px; margin: 14px 0 16px; padding: 0; list-style: none; }
+.mes-coins:empty { display: none; }
+.mon-coin { display: grid; grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px 10px 10px; border: 2px solid var(--line); border-radius: var(--r-btn); background: var(--bg); text-decoration: none; transition: transform .16s var(--sortie), border-color .2s ease-out; }
+.mon-coin:hover { transform: translateY(-2px) rotate(-.3deg); border-color: var(--ink-3); transition: transform .22s var(--ressort), border-color .2s ease-out; }
+.mon-coin .m-nom, .mon-coin .m-sous { display: block; }
+.mon-coin .m-nom { font: 400 18px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mon-coin .m-sous { margin-top: 3px; font: 500 12px/1.2 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.mon-coin .m-courbe { font: 500 12px/1.2 var(--mono); letter-spacing: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mon-coin .m-va { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); transition: color .2s ease-out; }
+.mon-coin:hover .m-va { color: var(--ink); }
+
+/* Le visuel du coin, comme un autocollant. Sans visuel : une tuile de trame, jamais une lettre. */
+.coin-img { position: relative; display: block; flex: none; width: 168px; aspect-ratio: 1; border: 3px solid var(--ink); border-radius: 26px; background: var(--surface) radial-gradient(circle at center, var(--ink-3) 0 2.2px, rgba(127, 147, 208, 0) 2.5px) 0 0 / 11px 11px; box-shadow: 0 0 0 2px var(--bg), 7px 8px 0 2px var(--bg); overflow: hidden; transform: rotate(-3deg); transition: transform .16s var(--sortie); }
+.coin-img img { width: 100%; height: 100%; object-fit: cover; }
+.coin-img.petit { width: 46px; border-width: 2px; border-radius: 12px; box-shadow: 0 0 0 2px var(--bg), 3px 4px 0 2px var(--bg); background-size: 7px 7px; }
+.jauge { display: block; height: 12px; margin-top: 8px; border: 2px solid var(--bg); border-radius: 8px; background: var(--line); box-shadow: 0 0 0 1px var(--line); overflow: hidden; }
+.jauge i { display: block; width: 0; height: 100%; border-radius: 0 4px 4px 0; background: radial-gradient(circle at center, var(--or-fonce) 0 1.3px, rgba(160, 119, 16, 0) 1.5px) 0 0 / 6px 6px, var(--or); transition: width .9s var(--entree); }
+
+/* La page du coin */
+.coin-tete { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: center; margin-top: 40px; padding: 34px clamp(20px, 4vw, 44px); border: 2px solid var(--bg); outline: 1px solid var(--line); border-radius: var(--r-case); background: var(--royal) repeating-conic-gradient(from 6deg at 12% 60%, rgba(166, 190, 244, .2) 0 6deg, rgba(166, 190, 244, 0) 6deg 18deg); overflow: hidden; }
+.coin-tete:hover .coin-img { transform: rotate(2deg) scale(1.03); transition: transform .3s var(--ressort); }
+.coin-nom > .t3 { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.coin-sous { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 12px 0 0; }
+.ticker { font: 500 15px/1 var(--mono); letter-spacing: 0; color: var(--ink); }
+.coin-texte { max-width: 46em; margin: 14px 0 20px; font-size: 17px; line-height: 1.45; white-space: pre-line; overflow-wrap: anywhere; }
+.coin-texte:empty { margin: 8px 0 12px; }
+.chiffres.bande { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); margin: 14px 0 0; }
+.chiffres.bande > div { border: 2px solid var(--line); background: var(--surface); }
+.chiffres.bande dd { font-size: 20px; }
+.coin-absent { display: none; margin-top: 48px; }
+.coin-absent .rang { margin-top: 22px; }
+.coin[data-etat="absent"] .coin-tete, .coin[data-etat="absent"] .chiffres, .coin[data-etat="erreur"] .coin-tete, .coin[data-etat="erreur"] .chiffres { display: none; }
+.coin[data-etat="absent"] .coin-absent, .coin[data-etat="erreur"] .coin-absent { display: block; animation: vue .28s ease-out both; }
+.coin[data-etat="absent"] #k-encore { display: none; }
+.coin[data-etat="charge"] .coin-nom, .coin[data-etat="charge"] .coin-sous { animation: clignote 1.1s ease-in-out infinite alternate; }
+.coin[data-etat="charge"] #k-liens { visibility: hidden; }
+
+/* Launch : cinq marches à gauche, le ticket du lancement à droite. */
+.etape[data-fait="true"]::before { background: var(--or); color: var(--bg); outline-color: var(--or-fonce); }
+.etape .identite { margin-bottom: 4px; }
+.etape .fichier { max-width: 520px; margin-top: 14px; transform: none; }
+.etape .fichier:hover { transform: translateY(-2px); }
+.etape .fichier pre { padding: 14px 16px 16px; font-size: 12.5px; }
+.etape .rang { margin-top: 14px; }
+.etape .rang .btn { margin-top: 0; }
+.aide { max-width: 520px; margin: 8px 0 0; font-size: 13px; line-height: 1.45; color: var(--ink-3); }
+.aide[data-kind="bad"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--corail); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.field.haut { height: auto; align-items: stretch; }
+.field textarea { flex: 1; min-width: 0; min-height: 104px; padding: 13px 0; border: 0; outline: 0; background: none; color: var(--ink); font: inherit; line-height: 1.55; letter-spacing: 0; resize: vertical; }
+.field textarea::placeholder { color: var(--ink-3); }
+.crans { display: flex; flex-wrap: wrap; gap: 8px; max-width: 520px; }
+.crans button { min-width: 62px; height: 42px; padding: 0 12px; border: 2px solid var(--line); border-radius: var(--r-pastille); background: var(--surface); color: var(--ink-2); font: 500 13px/1 var(--mono); letter-spacing: 0; font-variant-numeric: tabular-nums; transition: transform .16s var(--sortie), border-color .2s ease-out, color .2s ease-out, background-color .2s ease-out; }
+.crans button:hover { transform: translateY(-2px); border-color: var(--ink-3); color: var(--ink); transition: transform .22s var(--ressort), border-color .2s ease-out, color .2s ease-out; }
+.crans button:active { transform: translateY(1px); }
+.crans button[disabled] { border-style: dashed; background: var(--bg); color: var(--ink-3); transform: none; }
+.crans button[aria-checked="true"] { border-color: var(--ciel); background: var(--royal); color: var(--ink); }
+.ticket { padding: 20px 20px 18px; border: 2px solid var(--line); border-radius: var(--r-case); background: var(--surface) radial-gradient(circle at center, rgba(166, 190, 244, .09) 0 1.6px, rgba(166, 190, 244, 0) 1.8px) 0 0 / 9px 9px; }
+.ticket-coin { display: flex; align-items: center; gap: 16px; }
+.ticket-nom { margin: 0; font: 400 22px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; overflow-wrap: anywhere; }
+.ticket-sous { margin: 4px 0 0; font: 500 12px/1.4 var(--mono); letter-spacing: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.ticket-titre { margin: 0 0 4px; font: 400 22px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; }
+.liste-etat { display: grid; gap: 9px; margin: 16px 0; padding: 14px 0; border-top: 2px dashed var(--line); border-bottom: 2px dashed var(--line); list-style: none; font-size: 14px; line-height: 1.35; color: var(--ink-2); }
+.liste-etat li { display: flex; align-items: center; gap: 10px; transition: color .2s ease-out; }
+.liste-etat li[data-etat="on"], .liste-etat li[data-etat="faux"], .liste-etat li[data-etat="wait"] { color: var(--ink); }
+.couts { display: grid; gap: 7px; margin: 0; }
+.couts > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font: 500 13px/1.4 var(--mono); letter-spacing: 0; }
+.couts dt { color: var(--ink-2); }
+.couts dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.couts .total { margin-top: 6px; padding-top: 11px; border-top: 2px solid var(--line); }
+.couts .total dt { color: var(--ink); }
+.couts .total dd { font: 400 23px/1 var(--titre); letter-spacing: .01em; }
+.recoit { margin: 12px 0 0; padding: 9px 12px; border-radius: var(--r-pastille); background: var(--bg); font: 500 12px/1.45 var(--mono); letter-spacing: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+.btn.large { display: block; width: 100%; margin-top: 16px; }
+.btn.large .btn-face { padding: 16px 18px 15px; font-size: 19px; text-align: center; }
+.ticket .note { margin-top: 12px; color: var(--ink); }
+.petit-texte { margin: 12px 0 0; font-size: 12px; line-height: 1.5; color: var(--ink-3); }
+.v-envoi .mini { margin-top: 12px; }
+.v-fini { text-align: center; }
+.ticket-coq { width: min(300px, 86%); margin: -6px auto 12px; }
+[data-vue="fini"] .ticket-coq { animation: pose .5s var(--ressort) both; }
+.v-fini .ticket-titre { margin-bottom: 8px; }
+.v-fini .rang { justify-content: center; margin-top: 16px; }
+.v-fini .adr { color: var(--ink); }
+.epingle { margin-top: 20px; padding: 14px 16px 16px; border: 2px dashed var(--or-fonce); border-radius: var(--r-btn); background: var(--bg); text-align: left; }
+.epingle p { margin: 0 0 12px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.epingle b { font-weight: 700; color: var(--ink); }
+.epingle .epingle-t { margin-bottom: 6px; font: 400 18px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.epingle .rang { justify-content: flex-start; margin-top: 0; gap: 8px; }
+
+/* Coins : les lignes du tableau */
+.table .ligne td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: 14px; white-space: nowrap; }
+.table .ligne:last-child td { border-bottom: 0; }
+.table .ligne { transition: background-color .2s ease-out; }
+.table .ligne:hover { background: var(--bg); }
+.l-coin { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.l-coin b { display: block; font: 400 18px/1.15 var(--titre); letter-spacing: .02em; text-transform: uppercase; }
+.l-coin small { display: block; margin-top: 3px; font: 500 12px/1 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.l-depot { font: 500 13px/1.3 var(--mono); letter-spacing: 0; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); }
+.l-etat { display: flex; align-items: center; gap: 9px; font: 500 12px/1.3 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.l-courbe { min-width: 150px; font: 500 12px/1.3 var(--mono); letter-spacing: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.l-courbe .jauge { height: 10px; margin-top: 6px; }
+.t-attente { display: flex; align-items: center; gap: 10px; margin: 0; padding: 28px; font: 500 13px/1.45 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.table[data-etat="charge"] .t-vide, .table[data-etat="charge"] #c-lignes, .table[data-etat="vide"] .t-charge, .table[data-etat="vide"] #c-lignes, .table[data-etat="ok"] .t-charge, .table[data-etat="ok"] .t-vide { display: none; }
+
+@media (max-width: 900px) {
+  .porte { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .porte-art { height: 300px; border-left: 0; border-top: 2px solid var(--bg); }
+  .porte-coq { height: 92%; }
+  .espace { grid-template-columns: minmax(0, 1fr); }
+  .chiffres.bande { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chiffres.bande .large { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .compte .btn-face { width: 40px; padding: 0; justify-content: center; }
+  .compte .w-long { display: none; }
+  .compte .w-lampe { position: absolute; right: 5px; top: 5px; }
+  .creer .jeton { display: none; }
+  .porte-copy { padding: 28px 18px 26px; }
+  .porte-art { height: 250px; }
+  .guichet { padding: 14px 14px 12px; }
+  .faits { grid-template-columns: minmax(0, 1fr); }
+  .faits li + li { border-left: 0; border-top: 2px solid var(--line); }
+  .identite { flex-wrap: wrap; }
+  .reseau { margin-left: 52px; text-align: left; }
+  .coin-tete { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 26px 20px; }
+  .coin-img { width: 124px; }
+  .coin-img.petit { width: 46px; }
+  .mon-coin { grid-template-columns: auto minmax(0, 1fr); }
+  .mon-coin .m-courbe, .mon-coin .m-va { grid-column: 2; }
+  .ticket { padding: 16px 14px; }
+}
+@media (max-width: 400px) {
+  .n-docs { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mot-bas, .w-choix, .mini, .jauge i { animation: none !important; transition: none !important; }
+}
+
+/* La fenêtre de connexion, ouverte depuis n'importe quelle page. */
+.pop.entree { width: min(460px, calc(100% - 32px)); }
+.entree .entree-corps { margin-top: 16px; }
+.entree .w-choix img { width: 44px; height: 44px; margin: 0; transform: none; }
+.entree .wallets { padding-bottom: 6px; }
+.entree .pistes { margin-bottom: 4px; }
+.entree .entree-corps .btn { display: inline-block; margin-top: 14px; }
+.entree .note { margin-top: 12px; }
+.entree .note:empty { display: none; }
+.entree > .mini { margin-top: 18px; }
+
+/* Launch : deux champs côte à côte, et les réglages qu'on ouvre si on en a besoin. */
+.paire { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 0 14px; max-width: 520px; }
+.plus { max-width: 520px; margin-top: 16px; border-top: 2px dashed var(--line); }
+.plus summary { display: flex; align-items: center; gap: 10px; padding: 12px 0 2px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); list-style: none; transition: color .2s ease-out; }
+.plus summary::-webkit-details-marker { display: none; }
+.plus summary::before { content: ""; flex: none; width: 9px; height: 9px; border-right: 2px solid var(--ink-3); border-bottom: 2px solid var(--ink-3); rotate: -45deg; transition: rotate .2s var(--entree), border-color .2s ease-out; }
+.plus[open] summary::before { rotate: 45deg; }
+.plus summary:hover { color: var(--ink); }
+.plus summary:hover::before { border-color: var(--ink); }
+.plus .fichier { margin-top: 12px; }
+#l-fichier .rang { margin-top: 12px; }
+@media (max-width: 640px) {
+  .paire { grid-template-columns: minmax(0, 1fr); }
 }

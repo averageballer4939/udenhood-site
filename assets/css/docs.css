@@ -117,6 +117,19 @@ main.doc { --d-courbe: cubic-bezier(.22, 1, .36, 1); display: grid; grid-templat
 .sc-etat b { font-size: 15px; color: var(--ink); }
 .scene .pill.vif { background: rgba(188, 143, 17, .16); box-shadow: inset 0 0 0 2px var(--or-fonce); color: var(--ink); }
 .scene .pill { background: var(--surface); }
+/* Les pièces du login, du lancement et du coin dans un aperçu : les classes du site, marges remises à plat. */
+.scene .guichet, .scene .ticket, .scene .identite { max-width: none; margin: 0; }
+.scene .guichet p, .scene .identite p, .scene .ticket p { margin: 0; }
+.scene .guichet .g-titre { margin-bottom: 12px; }
+.scene .identite .id-adr { margin-top: 3px; }
+.scene .ticket .ticket-sous { margin-top: 4px; }
+.scene .ticket .note, .scene .ticket .recoit { margin-top: 12px; }
+.scene .w-choix, .scene .mini { pointer-events: none; cursor: default; }
+.scene .etat-ligne { margin: 0; }
+.scene .liste-etat { margin: 14px 0; }
+.scene .chiffres.bande { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); margin: 0; }
+.scene .jauge i { width: 10%; }
+.scene .fichier pre { font-size: 12.5px; }
 
 /* Le mouvement des aperçus : transform et opacity seulement. Le retard vient d'un indice (--k), par pas de 0,25 s. */
 .k1 { --k: 1; } .k2 { --k: 2; } .k3 { --k: 3; } .k4 { --k: 4; } .k5 { --k: 5; } .k6 { --k: 6; } .k7 { --k: 7; } .k8 { --k: 8; } .k9 { --k: 9; } .k10 { --k: 10; }

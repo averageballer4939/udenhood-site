@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Coins with proof · Udenhood</title>
-<meta name="description" content="Every coin launched on Udenhood, with its four lights. None yet: launch is in build.">
+<meta name="description" content="Coins launched from a GitHub repo that names them, each with its four lights. Read live from GitHub and Robinhood Chain.">
 <meta name="theme-color" content="#0F1734">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -26,30 +26,34 @@
   </nav>
   <div class="actions">
     <a class="btn creer" href="launch.html"><span class="btn-face"><img class="jeton" src="assets/cursors/piece@2x.png" width="64" height="64" alt="">Create</span></a>
+    <a class="btn nuit compte" href="connect.html" data-wallet data-etat="off" data-connexion="connect.html" data-compte="account.html" aria-label="Log in with your wallet"><span class="btn-face"><img class="w-ico" src="assets/icons/vault.png" width="256" height="256" alt=""><i class="w-lampe" aria-hidden="true"></i><span class="w-long">Log in</span><span class="w-bref">Log in</span></span></a>
     <a class="btn bleu surx" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
   </div>
 </header>
 <main id="main">
   <div class="page-tete">
     <h1 class="bd moyen"><span data-e="titre" class="d1"><span class="t3" data-t="Coins with">Coins with</span> <span class="t3 r" data-t="proof">proof</span></span></h1>
-    <p class="intro d2" data-e="bas">Every coin launched here, with its four lights.</p>
+    <p class="intro d2" data-e="bas">Coins launched from a repo that names them. Open one to see its four lights.</p>
   </div>
   <div class="table-wrap d3" data-e="bloc">
-    <table class="table">
-      <thead><tr><th scope="col">Coin</th><th scope="col">Repo</th><th scope="col">Owner</th><th scope="col">History</th><th scope="col">Running</th><th scope="col">Shipping</th><th scope="col">Launched</th></tr></thead>
-      <tbody><tr><td colspan="7">
+    <table class="table" id="c-table" data-etat="charge">
+      <thead><tr><th scope="col">Coin</th><th scope="col">Repo</th><th scope="col">Owner</th><th scope="col">Last push</th><th scope="col">On the curve</th><th scope="col"><span class="sr">Open</span></th></tr></thead>
+      <tbody id="c-lignes"></tbody>
+      <tbody class="t-charge"><tr><td colspan="6"><p class="t-attente"><i class="lampe" data-etat="wait" aria-hidden="true"></i><span id="c-attente">Reading the list from GitHub and the chain…</span></p></td></tr></tbody>
+      <tbody class="t-vide"><tr><td colspan="6">
         <div class="vide">
           <img src="assets/brand/coq-vide.png" width="498" height="520" alt="The rooster shrugs next to a traffic cone: the spot is free">
           <h2 class="bd petit"><span class="t3" data-t="No coin yet">No coin yet</span></h2>
-          <p>Launch is in build. Until it opens, this list stays empty. You can already check any repo, or sign yours.</p>
+          <p id="c-vide">No coin on the list yet. Launch from your repo, add the topic udenhood to it, and yours is the first.</p>
           <div class="rang">
-            <a class="btn" href="index.html#check"><span class="btn-face">Check a repo</span></a>
-            <a class="btn bleu" href="launch.html"><span class="btn-face">Sign your repo</span></a>
+            <a class="btn" href="launch.html"><span class="btn-face">Launch a coin</span></a>
+            <a class="btn bleu" href="index.html#check"><span class="btn-face">Check a repo</span></a>
           </div>
         </div>
       </td></tr></tbody>
     </table>
   </div>
+  <p class="limite">A coin enters this list when its repo names it in udenhood.json and carries the topic udenhood. GitHub can take a few minutes to list a new repo. The list is read live: nobody at Udenhood picks the coins.</p>
 </main>
 <footer class="pied">
   <div class="pied-haut">
@@ -64,23 +68,30 @@
     <nav class="pied-col" aria-label="Product">
       <h2>Product</h2>
       <a href="index.html#check">Check a repo</a>
-      <a href="launch.html">Launch</a>
+      <a href="launch.html">Launch a coin</a>
       <a href="coins.html">Coins</a>
+      <a href="account.html">Your account</a>
     </nav>
     <nav class="pied-col" aria-label="Docs">
       <h2>Docs</h2>
       <a href="docs/index.html">Start here</a>
       <a href="docs/owner.html">The four lights</a>
-      <a href="docs/sign.html">Sign your repo</a>
+      <a href="docs/launch.html">Launch a coin</a>
+      <a href="docs/costs.html">Costs</a>
       <a href="docs/limits.html">Limits</a>
     </nav>
     <img class="pied-coq" src="assets/brand/coq-pied.png" width="489" height="460" alt="" loading="lazy">
   </div>
   <div class="pied-bas">
-    <p>Checks work today. Launch is in build, on Robinhood Chain.</p>
-    <p>Not affiliated with Robinhood or GitHub.</p>
+    <p>Coins launch on Pons v2 contracts, on Robinhood Chain. Those contracts are unaudited.</p>
+    <p>Not affiliated with Robinhood, GitHub or Pons.</p>
   </div>
 </footer>
 <script src="assets/js/site.js" defer></script>
+<script src="assets/js/commun.js" defer></script>
+<script src="assets/js/chaine.js" defer></script>
+<script src="assets/js/wallet.js" defer></script>
+<script src="assets/js/preuve.js" defer></script>
+<script src="assets/js/coins.js" defer></script>
 </body>
 </html>
