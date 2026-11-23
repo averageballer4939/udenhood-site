@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Udenhood · Pop the hood on any coin</title>
+<meta name="description" content="Paste the GitHub repo behind a coin. Four live checks show if the project exists, runs and ships. On Robinhood Chain.">
+<meta name="theme-color" content="#0F1734">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; connect-src https:; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/titre.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/entree.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Udenhood, home"><img class="mot" src="assets/brand/logo-udenhood.png" width="1200" height="253" alt="Udenhood"><img class="signe" src="assets/brand/u-64.png" width="128" height="111" alt=""></a>
+  <nav class="nav" aria-label="Main">
+    <a class="n-check" href="index.html" aria-current="page">Check</a>
+    <a class="n-launch" href="launch.html">Launch</a>
+    <a class="n-coins" href="coins.html">Coins</a>
+    <a class="n-docs" href="docs/index.html">Docs</a>
+  </nav>
+  <div class="actions">
+    <a class="btn creer" href="launch.html"><span class="btn-face"><img class="jeton" src="assets/cursors/piece@2x.png" width="64" height="64" alt="">Create</span></a>
+    <a class="btn bleu surx" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
+  </div>
+</header>
+<main id="main">
+  <section class="hero" id="check" aria-labelledby="titre" data-e="bloc">
+    <div class="hero-field" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <h1 class="bd" id="titre"><span data-e="titre" class="d2"><span class="t3" data-t="Pop the hood">Pop the hood</span></span> <span data-e="titre" class="d3"><span class="t3" data-t="on">on</span> <span class="t3 r" data-t="any coin">any coin</span></span></h1>
+      <p class="lede d4" data-e="bas">Paste the repo behind a coin. Four live checks show if it exists, runs and ships.</p>
+      <form class="check d5" id="form" novalidate data-e="bas">
+        <label class="sr" for="repo">GitHub repo, as owner/repo</label>
+        <div class="field">
+          <span class="field-pre" aria-hidden="true">github.com/</span>
+          <input id="repo" name="repo" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="owner/repo">
+        </div>
+        <button class="btn" type="submit" id="go"><span class="btn-face">Pop the hood</span></button>
+      </form>
+      <p class="note d6" id="note" role="status" data-e="bas">Your browser asks GitHub directly. Nothing is stored.</p>
+    </div>
+    <div class="hero-art" id="art" data-open="false">
+      <i class="eclat eclat-b d2" data-e="eclat" aria-hidden="true"></i>
+      <i class="eclat eclat-a d3" data-e="eclat" aria-hidden="true"></i>
+      <i class="etincelle e1" aria-hidden="true"></i><i class="etincelle e2" aria-hidden="true"></i><i class="etincelle e3" aria-hidden="true"></i>
+      <div class="coq-b d4" data-e="coq"><img class="coq" src="assets/brand/coq-hero.png" width="975" height="900" alt="The Udenhood rooster bursts out of the corner, holding up a gold coin"></div>
+      <img class="capot" src="assets/monument/capot-leve.png" width="917" height="917" alt="A small blue car with its hood up: the rooster holds it open over four gauges">
+    </div>
+  </section>
+
+  <section class="bloc" id="card" aria-labelledby="t-card">
+    <div class="tag" data-v="gauche">
+      <img src="assets/icons/proofFile.png" width="256" height="256" alt="">
+      <h2 class="bd petit" id="t-card"><span class="t3" data-t="Proof card">Proof card</span></h2>
+    </div>
+    <figure class="carte">
+    <figcaption class="cible" id="cible" aria-live="polite">Nothing checked yet.</figcaption>
+    <ol class="lights" id="lights">
+      <li data-v="pop" class="d1">
+        <button class="light" type="button" data-k="owner" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofOwner.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Owner</span>
+          <span class="light-line">The repo signs the coin.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d2">
+        <button class="light" type="button" data-k="history" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofHistory.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">History</span>
+          <span class="light-line">Built over time, not overnight.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d3">
+        <button class="light" type="button" data-k="running" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofRunning.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Running</span>
+          <span class="light-line">It is live. We ping it.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+      <li data-v="pop" class="d4">
+        <button class="light" type="button" data-k="shipping" data-state="idle" aria-haspopup="dialog">
+          <img src="assets/icons/proofShipping.png" width="256" height="256" alt="">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="light-name">Shipping</span>
+          <span class="light-line">The team keeps pushing.</span>
+          <span class="light-more">Open the proof</span>
+        </button>
+      </li>
+    </ol>
+    </figure>
+    <p class="limite">The card shows that a project exists, runs and ships. It does not say the project is good, or that its coin is worth anything.</p>
+  </section>
+
+  <section class="bloc" id="launch" aria-labelledby="t-launch">
+    <div class="tag" data-v="gauche">
+      <img src="assets/icons/launch.png" width="256" height="256" alt="">
+      <h2 class="bd petit" id="t-launch"><span class="t3" data-t="Launch from your repo">Launch from your repo</span></h2>
+      <span class="pill">In build</span>
+    </div>
+    <div class="duo">
+      <div data-v>
+        <p>Sign your repo today: one file, your wallet in it. Launch will read that file.</p>
+        <a class="btn" id="suite" href="launch.html"><span class="btn-face">Sign your repo</span></a>
+      </div>
+      <figure class="fichier" data-v="pop">
+        <figcaption><img src="assets/icons/proofFile.png" width="256" height="256" alt=""> udenhood.json</figcaption>
+        <pre id="s-apercu">{
+  "udenhood": <b>1</b>,
+  "chain": <b>4663</b>,
+  "wallet": <i>"0x…"</i>,
+  "ticker": <i>"COIN"</i>
+}</pre>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-t">
+  <img id="pop-i" src="assets/icons/proofOwner.png" width="256" height="256" alt="">
+  <h2 class="bd petit" id="pop-t">Owner</h2>
+  <p id="pop-l">The repo signs the coin.</p>
+  <p class="pop-d" id="pop-d">Paste a repo to check.</p>
+  <a class="pop-a" id="pop-a" href="https://github.com" rel="noopener" hidden>See the raw proof</a>
+  <button class="btn" type="button" id="pop-x"><span class="btn-face">Got it</span></button>
+</dialog>
+<footer class="pied">
+  <div class="pied-haut">
+    <div class="pied-marque">
+      <a class="pied-logo" href="index.html" aria-label="Udenhood, home"><img src="assets/brand/logo-udenhood.png" width="1200" height="253" alt="Udenhood" loading="lazy"></a>
+      <p>Pop the hood on any coin.</p>
+      <div class="touches">
+        <a class="btn clair touche" href="https://github.com/averageballer4939/udenhood-site" rel="noopener" aria-label="Udenhood on GitHub"><span class="btn-face"><img src="assets/brand/github-invertocat.svg" width="128" height="128" alt=""></span></a>
+        <a class="btn bleu touche" href="https://x.com/udenhood" rel="noopener" aria-label="Udenhood on X"><span class="btn-face"><img class="x" src="assets/brand/x-logo.png" width="64" height="65" alt=""></span></a>
+      </div>
+    </div>
+    <nav class="pied-col" aria-label="Product">
+      <h2>Product</h2>
+      <a href="index.html#check">Check a repo</a>
+      <a href="launch.html">Launch</a>
+      <a href="coins.html">Coins</a>
+    </nav>
+    <nav class="pied-col" aria-label="Docs">
+      <h2>Docs</h2>
+      <a href="docs/index.html">Start here</a>
+      <a href="docs/owner.html">The four lights</a>
+      <a href="docs/sign.html">Sign your repo</a>
+      <a href="docs/limits.html">Limits</a>
+    </nav>
+    <img class="pied-coq" src="assets/brand/coq-pied.png" width="489" height="460" alt="" loading="lazy">
+  </div>
+  <div class="pied-bas">
+    <p>Checks work today. Launch is in build, on Robinhood Chain.</p>
+    <p>Not affiliated with Robinhood or GitHub.</p>
+  </div>
+</footer>
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/commun.js" defer></script>
+<script src="assets/js/check.js" defer></script>
+<script src="assets/js/signer.js" defer></script>
+</body>
+</html>
