@@ -1,7 +1,5 @@
-/* Doc d'Udenhood. Méthode : db/references/proxima/FICHE.md (référence de base : bandeau, une phrase d'intro, étapes
-   reliées, boutons cités en pastille, encadrés teintés, aperçu sous l'intro, liens vers la suite, recherche) et
-   db/sources/bndl-me/docs-site.md (nos pièces : barre latérale, sommaire, pager, palette sans champ, scènes en boucle
-   de 8 s dont l'état de base est l'état final). Rien n'en est copié.
+/* Doc d'Udenhood : barre latérale, sommaire, pager, palette de recherche, étapes reliées, boutons cités en pastille,
+   encadrés teintés, scènes en boucle de 8 s dont l'état de base est l'état final.
    Aucune couleur écrite ici hors des jetons de site.css. Les polices passent par --titre, --texte et --mono. */
 
 main.doc { --d-courbe: cubic-bezier(.22, 1, .36, 1); display: grid; grid-template-columns: 248px minmax(0, 720px); justify-content: center; align-items: start; gap: 0 48px; width: min(1296px, 100% - 2 * clamp(16px, 4vw, 40px)); padding-top: 28px; }
